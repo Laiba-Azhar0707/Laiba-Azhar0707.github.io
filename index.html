@@ -72,7 +72,7 @@
     display:flex; align-items:center; justify-content:center;
     border:1px solid rgba(255,255,255,0.15);
   }
-  .avatar-badge img{width:100%; height:100%; object-fit:cover; display:block;}
+  .avatar-badge img{width:100%; height:100%; object-fit:cover; object-position:50% 20%; display:block;}
   .logo{font-family:var(--font-mono); font-size:14px; color:var(--teal); letter-spacing:0.02em;}
   .logo span{color:var(--text-faint);}
   .navlinks{list-style:none; display:flex; gap:26px; font-family:var(--font-mono); font-size:13px;}
@@ -663,10 +663,10 @@
     var W, H, nodes;
     function resize(){
       W = canvas.width = window.innerWidth;
-      H = canvas.height = Math.max(window.innerHeight, document.body.scrollHeight);
+      H = canvas.height = window.innerHeight;
     }
     function initNodes(){
-      var count = Math.min(140, Math.floor((W * H) / 12000));
+      var count = Math.min(110, Math.floor((W * H) / 9000));
       nodes = [];
       for(var i = 0; i < count; i++){
         nodes.push({
