@@ -239,6 +239,9 @@
   .project-links{display:flex; gap:18px; font-family:var(--font-mono); font-size:12.5px;}
   .project-links a{color:var(--text-dim); text-decoration:none; border-bottom:1px solid var(--line); padding-bottom:1px; transition:color .15s, border-color .15s;}
   .project-links a:hover{color:var(--teal); border-color:var(--teal);}
+  .project-credit{color:var(--text-faint); font-size:12px;}
+  .project-credit a{color:var(--text-faint); border-bottom:1px solid var(--line);}
+  .project-credit a:hover{color:var(--teal); border-color:var(--teal);}
 
   .pipeline{display:flex; align-items:center; flex-wrap:wrap; font-family:var(--font-mono); font-size:11px; color:var(--text-faint); margin-bottom:20px; gap:0;}
   .pl-stage{display:flex; align-items:center; gap:6px;}
@@ -267,12 +270,19 @@
   .more-projects-h3{font-family:var(--font-mono); font-size:12.5px; color:var(--text-faint); text-transform:uppercase; letter-spacing:0.05em; margin-bottom:20px;}
   .mini-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:14px;}
   .mini-card{
+    display:block; text-decoration:none;
     background:rgba(255,255,255,0.02); border:1px solid var(--line); border-radius:10px;
     padding:16px 18px; transition:border-color .2s, transform .2s;
   }
   .mini-card:hover{border-color:rgba(255,111,160,0.3); transform:translateY(-2px);}
   .mini-tag{font-family:var(--font-mono); font-size:10.5px; color:var(--teal); text-transform:uppercase; letter-spacing:0.04em; margin-bottom:8px;}
-  .mini-title{font-size:13.5px; color:var(--text-dim); line-height:1.4;}
+  .mini-title{font-size:13.5px; color:var(--text); font-weight:500; line-height:1.4; margin-bottom:4px;}
+  .mini-sub{font-size:12px; color:var(--text-faint); line-height:1.4;}
+  .more-projects-link{
+    display:inline-block; margin-top:20px; font-family:var(--font-mono); font-size:12.5px;
+    color:var(--teal); text-decoration:none; border-bottom:1px solid rgba(255,111,160,0.35);
+  }
+  .more-projects-link:hover{border-color:var(--teal);}
   @media (max-width:760px){.mini-grid{grid-template-columns:1fr 1fr;}}
   @media (max-width:480px){.mini-grid{grid-template-columns:1fr;}}
 
@@ -578,6 +588,45 @@
     <div class="project featured">
       <div class="featured-tag">Flagship project</div>
       <div class="project-top">
+        <div class="project-title">Multistage Wound Screening AI</div>
+        <div class="project-status">96.3% detection accuracy</div>
+      </div>
+      <div class="pipeline">
+        <div class="pl-stage"><span class="pl-dot"></span>binary wound detection</div><span class="pl-arrow">→</span>
+        <div class="pl-stage"><span class="pl-dot"></span>9-class classification</div><span class="pl-arrow">→</span>
+        <div class="pl-stage"><span class="pl-dot"></span>OOD robustness check</div>
+      </div>
+
+      <div class="case-study">
+        <div class="case-block">
+          <div class="case-label">Why multi-stage</div>
+          <p>Single-model wound classifiers fail silently on inputs they weren't trained for, a burn misclassified with false confidence, or a non-wound image processed as if it were one. This pipeline splits the problem into three stages so each failure mode gets caught explicitly instead of hiding behind one softmax output.</p>
+        </div>
+        <div class="case-block">
+          <div class="case-label">The pipeline</div>
+          <p>Stage 1 filters non-wound images: 5 architectures benchmarked (CustomCNN, MobileNetV2, ResNet50V2, EfficientNetB0/B3) on 6,705 images, MobileNetV2 won at 96.3% accuracy and 0.994 AUC. Stage 2 classifies detected wounds into 9 clinical categories (bruise, pressure ulcer, infected wound, abrasion, laceration, venous ulcer, burn, cut, diabetic ulcer) across 746 images with 5-fold cross-validation, EfficientNetB3 led at 71.3% CV accuracy. Stage 3 stress-tests all 5 models against 233 out-of-distribution images to measure how often the system over-trusts inputs it should flag as uncertain.</p>
+        </div>
+        <div class="case-block">
+          <div class="case-label">Edge deployment</div>
+          <p>Scored every model on a composite of accuracy, inference speed, and size to pick a deployment target. MobileNetV2 scored highest (0.908) and was exported to TFLite for mobile and edge use, trained via DirectML so it runs without a CUDA GPU.</p>
+        </div>
+        <div class="case-block">
+          <div class="case-label">Known limitation, documented honestly</div>
+          <p>Stage 3 OOD detection didn't hit the target false-positive rate (under 10%) on any architecture, the best came in at 66.5%. That means the system currently over-trusts out-of-distribution inputs more than a real clinical deployment would allow. Logged here as the clearest next research direction rather than hidden: confidence calibration, a dedicated OOD head, or Mahalanobis-distance-based rejection.</p>
+        </div>
+      </div>
+
+      <div class="stack">
+        <span class="chip">TensorFlow / Keras</span><span class="chip">MobileNetV2</span><span class="chip">EfficientNet</span><span class="chip">Grad-CAM</span><span class="chip">TFLite</span><span class="chip">DirectML</span>
+      </div>
+      <div class="project-links">
+        <a href="https://github.com/Laiba-Azhar0707/multistage-wound-screening-ai" target="_blank" rel="noopener">Source</a>
+        <span class="project-credit">Built with <a href="https://github.com/urva-ishfaq393" target="_blank" rel="noopener">Urva Ishfaq</a></span>
+      </div>
+    </div>
+
+    <div class="project">
+      <div class="project-top">
         <div class="project-title">Medical Billing RAG System</div>
         <div class="project-status">100% precision</div>
       </div>
@@ -586,26 +635,7 @@
         <div class="pl-stage"><span class="pl-dot"></span>5,533 vectors indexed</div><span class="pl-arrow">→</span>
         <div class="pl-stage"><span class="pl-dot"></span>grounded, cited answer</div>
       </div>
-
-      <div class="case-study">
-        <div class="case-block">
-          <div class="case-label">The problem</div>
-          <p>Medical billing questions need answers grounded in real source documents, not a model's memory. A hallucinated billing code or credentialing requirement isn't a minor error, it's the kind of mistake that costs a practice money or compliance standing.</p>
-        </div>
-        <div class="case-block">
-          <div class="case-label">The approach</div>
-          <p>Processed 264 medical articles into 5,533 vector chunks using semantic chunking (800 characters, 150-character overlap) tuned to preserve medical context across chunk boundaries, rather than splitting mid-concept. Embedded with sentence-transformers/all-MiniLM-L6-v2 and served answers through Mistral 7B via the Hugging Face Inference API, with every answer required to cite its source chunk.</p>
-        </div>
-        <div class="case-block">
-          <div class="case-label">The decision</div>
-          <p>Evaluated Chroma against Pinecone and Weaviate, and MiniLM against larger embedding models, specifically for local deployment without cloud dependency. Chose the smaller, self-hostable stack after the larger options showed no meaningful precision gain on this domain, just added latency and cost.</p>
-        </div>
-        <div class="case-block">
-          <div class="case-label">The result</div>
-          <p>100% precision on the evaluation set with full source attribution and sub-second retrieval, deployed as a public Gradio app on Hugging Face Spaces.</p>
-        </div>
-      </div>
-
+      <div class="project-desc">A production RAG system that processed <strong>264 medical articles into 5,533 vector chunks</strong>, reaching <strong>100% precision</strong> on the evaluation set with full source attribution and sub-second retrieval. Semantic chunking (800 characters, 150-character overlap) preserved medical context, sentence-transformers/all-MiniLM-L6-v2 handled embeddings, and Mistral 7B via the Hugging Face Inference API served every answer with a required source citation. Chose the smaller Chroma plus MiniLM stack over Pinecone/Weaviate and larger embedding models after benchmarking showed no precision gain, just added latency and cost, for local deployment.</div>
       <div class="stack">
         <span class="chip">ChromaDB</span><span class="chip">Mistral 7B</span><span class="chip">LangChain</span><span class="chip">sentence-transformers</span><span class="chip">Gradio</span><span class="chip">Hugging Face Spaces</span>
       </div>
@@ -655,16 +685,16 @@
     </div>
 
     <div class="more-projects">
-      <h3 class="more-projects-h3">More coursework projects</h3>
+      <h3 class="more-projects-h3">More projects on GitHub</h3>
       <div class="mini-grid">
-        <div class="mini-card"><div class="mini-tag">Computer vision</div><div class="mini-title">Image classification &amp; object detection</div></div>
-        <div class="mini-card"><div class="mini-tag">Web technologies</div><div class="mini-title">Full-stack web application</div></div>
-        <div class="mini-card"><div class="mini-tag">Operating systems</div><div class="mini-title">Process scheduling simulator</div></div>
-        <div class="mini-card"><div class="mini-tag">Computer networks</div><div class="mini-title">Socket-based network application</div></div>
-        <div class="mini-card"><div class="mini-tag">Mobile development</div><div class="mini-title">Cross-platform Flutter app</div></div>
-        <div class="mini-card"><div class="mini-tag">DevOps</div><div class="mini-title">Containerized CI/CD deployment demo</div></div>
-        <div class="mini-card"><div class="mini-tag">Software engineering</div><div class="mini-title">Semester capstone project</div></div>
+        <a class="mini-card" href="https://github.com/Laiba-Azhar0707/Heart-Disease-Prediction-Model-LogisticRegression" target="_blank" rel="noopener"><div class="mini-tag">Logistic regression</div><div class="mini-title">Heart disease prediction</div><div class="mini-sub">11 clinical features, cardiovascular dataset</div></a>
+        <a class="mini-card" href="https://github.com/Laiba-Azhar0707/FlightFare-Predictor-RandomForest" target="_blank" rel="noopener"><div class="mini-tag">Random forest</div><div class="mini-title">Flight fare predictor</div><div class="mini-sub">Indian airline booking data</div></a>
+        <a class="mini-card" href="https://github.com/Laiba-Azhar0707/Predicting-Track-Skips-on-Spotify-A-Binary-Classification-Approach" target="_blank" rel="noopener"><div class="mini-tag">Decision tree</div><div class="mini-title">Spotify skip predictor</div><div class="mini-sub">Binary classification on playback behavior</div></a>
+        <a class="mini-card" href="https://github.com/Laiba-Azhar0707/Phone_Addiction_Teens_Using_KNNclassifier" target="_blank" rel="noopener"><div class="mini-tag">KNN classifier</div><div class="mini-title">Teen phone addiction predictor</div><div class="mini-sub">Screen time, grade level, usage habits</div></a>
+        <a class="mini-card" href="https://github.com/Laiba-Azhar0707/Car-Price-Prediction-Model-DecisionTreeRegressor" target="_blank" rel="noopener"><div class="mini-tag">Decision tree regressor</div><div class="mini-title">Car price prediction</div><div class="mini-sub">Vehicle feature-based pricing model</div></a>
+        <a class="mini-card" href="https://github.com/Laiba-Azhar0707/Life-Expectancy-Predictor" target="_blank" rel="noopener"><div class="mini-tag">Linear regression</div><div class="mini-title">Life expectancy predictor</div><div class="mini-sub">EDA and visualization on global health data</div></a>
       </div>
+      <a href="https://github.com/Laiba-Azhar0707" target="_blank" rel="noopener" class="more-projects-link">View all repositories on GitHub →</a>
     </div>
   </div>
 </section>
